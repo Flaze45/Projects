@@ -1,0 +1,132 @@
+import math
+
+print('\nWelcome to the vending machine change maker program')
+print('Change maker initialized.')
+
+nickels = 25
+dimes = 25
+quarters = 25
+ones = 0
+fives = 0
+x = True
+while x is True:
+    print("\nStock contains:")
+    print(f"  {int(nickels)} nickels")
+    print(f"  {int(dimes)} dimes")
+    print(f"  {int(quarters)} quarters")
+    print(f"  {int(ones)} ones")
+    print(f"  {int(fives)} fives\n")
+
+    # Jonell
+    i = input("Enter the purchase price (xx.xx) or 'q' to quit: ")
+    while i == 'q' or round(float(i)*100) % 5 != 0 or round(float(i)*100) < 0:  # format to accommodate multiple illegal entries
+        if i == 'q':
+            x = False
+            break
+        else:
+            print("Illegal price: Must enter a non-negative multiple of 5 cents.")
+            i = input("\nEnter the purchase price (xx.xx) or 'q' to quit: ")
+
+    if x is True:
+        i = float(i)
+        price = round(i * 100)
+        dollars = price // 100
+        cents = price % 100
+
+        print("\nMenu for deposits:")
+        print("  'n'  -  deposit a nickel")
+        print("  'd'  -  deposit a dime")
+        print("  'q'  -  deposit a quarter")
+        print("  'o'  -  deposit a one dollar bill")
+        print("  'f'  -  deposit a five dollar bill")
+        print("  'c'  -  cancel the purchase\n")
+
+        # Jonell
+        deposit = 0
+        while price >= 0:
+            dollars = price // 100
+            cents = price % 100
+            print(f"Payment due: {dollars} dollar(s) and {cents} cents")
+            letter = input('Indicate your deposit: ')
+            if letter == 'n':
+                deposit += 5
+                price -= 5
+                nickels += 1
+            elif letter == 'd':
+                deposit += 10
+                price -= 10
+                dimes += 1
+            elif letter == 'q':
+                deposit += 25
+                price -= 25
+                quarters += 1
+            elif letter == 'o':
+                deposit += 100
+                price -= 100
+                ones += 1
+            elif letter == 'f':
+                deposit += 500
+                price -= 500
+                fives += 1
+            elif letter == 'c':
+                price = deposit  # the accumulation of value the user entered
+                break
+            else:
+                print("Illegal selection:", letter)
+            if price == 0:  # if equal, no change
+                print("\nPlease take the change below.")
+                print("  No change due.")
+                break
+
+        # Anthony
+        change_due = math.fabs(price)  # if there's a change, price would be negative, need to make it positive
+        if change_due > 0:
+            print("\nPlease take the change below.")
+            quarters_needed = change_due // 25
+            if quarters - quarters_needed >= 0:
+                change_due = change_due - (quarters_needed * 25)
+                quarters -= quarters_needed
+                quarters_given = quarters_needed
+            else:
+                change_due = change_due - (quarters * 25)
+                quarters_given = quarters
+                quarters = 0
+            if quarters_given > 0:
+                print(f"  {int(quarters_given)} quarters")
+
+            dimes_needed = change_due // 10
+            if dimes - dimes_needed >= 0:
+                change_due = change_due - (dimes_needed * 10)
+                dimes -= dimes_needed
+                dimes_given = dimes_needed
+            else:
+                change_due = change_due - (dimes * 10)
+                dimes_given = dimes
+                dimes = 0
+            if dimes_given > 0:
+                print(f"  {int(dimes_given)} dimes")
+
+            nickels_needed = change_due // 5
+            if nickels - nickels_needed >= 0:
+                change_due = change_due - (nickels_needed * 5)
+                nickels -= nickels_needed
+                nickels_given = nickels_needed
+            else:
+                change_due = change_due - (nickels * 5)
+                nickels_given = nickels
+                nickels = 0
+            if nickels_given > 0:
+                print(f"  {int(nickels_given)} nickels")
+
+            if change_due > 0:
+                change_dollars = change_due // 100
+                change_cents = change_due % 100
+                print("Machine is out of change.")
+                print("See store manager for remaining refund.")
+                print(f"Amount due is: {int(change_dollars)} dollars and {int(change_cents)} cents\n")
+
+# Anthony
+total = fives*500 + ones*100 + quarters*25 + dimes*10 + nickels*5
+total_dollars = total//100
+total_cents = total % 100
+print(f"\nTotal: {int(total_dollars)} dollars and {int(total_cents)} cents")
